@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Management Application</title>
+  <link rel="icon" href="logo.png">
+  <style>
+    .container{
+  max-width:800px;
+  margin:20px auto;
+  padding:20px;
+  border-radius:8px;
+}
+form{
+  padding:20px;
+  background: #000000;
+  color: #fff;
+  border-radius:8px;
+}
+form div{
+  margin-bottom: 15px;
+}
+form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+form input, form textarea, form select{
+  width:100%;
+  padding:10px;
+  border:1px;
+  border-radius:4px;
+  box-sizing:border-box;
+}
+input[type="submit"]{
+  width:100%;
+  background: #fc9696;
+  font-weight:bold;
+  padding:10px;
+  cursor:pointer;
+  border-radius:4px;
+} 
+input[type="submit"]:hover{
+  background: #5aef58;
+}
+.list{  /* Task table */
+  width:100%;
+  text-align:left;
+  margin-top:20px;
+}
+.list th,.list td{
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.list th {
+  background-color: #000000;
+  color: #fff;
+  font-weight:bold;
+}
+.list tr{
+  background-color: #b3e5e6;
+}
+button{
+  padding:5px 10px;
+  margin-right:5px;
+  background-color: #7cace0;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+}
+button:hover{
+  background-color:#e0ec75;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+     <img src="iLink logo png.webp"alt="logo"> 
+     <h1>Task Management Application</h1>
+    <form autocomplete="off"onsubmit="addTask(event)">
+      <div>
+        <label for="taskname">Task Name</label>
+        <input type="text"name="taskname"id="taskname"required>
+      </div>
+      <div>
+        <label for="taskdesc">Description</label>
+        <input name="taskdesc"id="taskdesc"required></input>
+      </div>
+      <div>
+        <label for="taskstatus">Status</label>
+        <select name="taskstatus"id="taskstatus">
+          <option value="Pending">Pending</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+      <div>
+        <label for="duedate">Due Date</label>
+        <input type="date"name="duedate"id="duedate"required>
+      </div>
+      <div>
+        <input type="submit" value="Add Task">
+      </div>
+    </form>
+    <div>
+      <label for="filter">Filter Tasks:</label>
+      <select id="filter"onchange="filterTasks()">
+        <option value="All">All</option>
+        <option value="Pending">Pending</option>
+        <option value="Completed">Completed</option>
+      </select>
+    </div>
+    <table class="list"id="tasklist">
+      <thead>
+        <tr>
+          <th>Task Name</th>
+          <th>Task Description</th>
+          <th>Status</th>
+          <th>Due Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tasks">
+
+      </tbody>
+    </table>
+  </div>
+  <script>
+        class Task{
+    constructor(name,description,status='Pending',dueDate) {
+      this.name=name;
+      this.description=description;
+      this.status=status;
+      this.dueDate=dueDate; 
+    }
+  }
+  let tasks=JSON.parse(localStorage.getItem('tasks')) || [];
+  const displayTasks=(filter='All')=>{
+    const tasksTable=document.getElementById('tasks');
+    tasksTable.innerHTML='';
+    tasks.forEach((task,index)=>{
+      if(filter==='All'||task.status===filter){
+        const row=document.createElement('tr');
+        row.innerHTML=`<td>${task.name}</td>
+        <td>${task.description}</td>
+        <td>${task.status}</td>
+        <td>${task.dueDate}</td>
+        <td>
+          <button onclick="editTask(${index})">Edit</button>
+          <button onclick="deleteTask(${index})">Delete</button>
+          <button onclick="changeStatus(${index})">Change Status</button>
+        </td>
+      `; tasksTable.appendChild(row);
+      }
+    })
+  };
+  //filter function
+  const filterTasks=()=>{
+    const filterValue=document.getElementById('filter').value;
+    displayTasks(filterValue);
+  }
+  //add function
+  const addTask = (event) => {
+    const name=document.getElementById('taskname').value.trim();
+    const description=document.getElementById('taskdesc').value.trim();
+    const status=document.getElementById('taskstatus').value;
+    const dueDate=document.getElementById('duedate').value; 
+  
+    const newTask=new Task(name,description,status,dueDate);
+    tasks.push(newTask);//push the new data into array
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    displayTasks();
+    document.querySelector('form').reset(); //Clear form fields
+  };
+  //delete function
+  const deleteTask=(index)=>{
+    tasks.splice(index,1); //removes task
+    localStorage.setItem('tasks',JSON.stringify(tasks));
+    displayTasks();
+  };
+  window.onload=displayTasks;//loads data when page is refreshed
+  //status function
+  const changeStatus=(index)=>{
+    const task=tasks[index];
+    task.status=task.status==='Pending' ? 'Completed' : 'Pending';
+    localStorage.setItem('tasks',JSON.stringify(tasks));
+    displayTasks();
+  }
+  //edit function
+  const editTask = (index) => {
+    const task = tasks[index];
+    const newName = prompt('Enter new Task Name:',task.name);
+    const newDescription = prompt('Enter new Task Description:',task.description);
+    const newDueDate = prompt('Enter new Due Date:',task.dueDate);
+  
+    task.name=newName.trim();
+    task.description=newDescription.trim();
+    task.dueDate=newDueDate; 
+    localStorage.setItem('tasks',JSON.stringify(tasks)); 
+    displayTasks();
+  };
+  
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
