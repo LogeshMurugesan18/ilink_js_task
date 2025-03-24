@@ -1,0 +1,67 @@
+.container{
+  max-width:800px;
+  margin:20px auto;
+  padding:20px;
+  border-radius:8px;
+}
+form{
+  padding:20px;
+  background: #000000;
+  color: #fff;
+  border-radius:8px;
+}
+form div{
+  margin-bottom: 15px;
+}
+form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+form input, form textarea, form select{
+  width:100%;
+  padding:10px;
+  border:1px;
+  border-radius:4px;
+  box-sizing:border-box;
+}
+input[type="submit"]{
+  width:100%;
+  background: #fc9696;
+  font-weight:bold;
+  padding:10px;
+  cursor:pointer;
+  border-radius:4px;
+} 
+input[type="submit"]:hover{
+  background: #5aef58;
+}
+.list{  /* Task table */
+  width:100%;
+  text-align:left;
+  margin-top:20px;
+}
+.list th,.list td{
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.list th {
+  background-color: #000000;
+  color: #fff;
+  font-weight:bold;
+}
+.list tr{
+  background-color: #b3e5e6;
+}
+button{
+  padding:5px 10px;
+  margin-right:5px;
+  background-color: #7cace0;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+}
+button:hover{
+  background-color:#e0ec75;
+}
